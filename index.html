@@ -1,0 +1,90 @@
+<!DOCTYPE html>  
+<html lang="en">  
+
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Storage Contract</title>  
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>  
+</head>  
+
+<body>  
+    <h1>Storage Smart Contract</h1>  
+    <div>  
+        <label for="storeAmount">Store Amount:</label>  
+        <input type="text" id="storeAmount" placeholder="Enter amount" />  
+        <button id="storeBtn">Store</button>  
+    </div>  
+    <div>  
+        <button id="viewBtn">View Stored Amount</button>  
+    </div>  
+    <h2>Stored Amount: <span id="storedAmount">0</span></h2>  
+
+
+
+    <h2>reply</h2>
+<h4>{{r}}</h4>
+ 
+<form action="/main" method="post">
+    <p><input type="submit" value="Main"></p>
+</form>
+ 
+<form action="/" method="post">
+    <p><input type="submit" value="Login Page"></p>
+</form>
+
+
+
+
+
+
+
+
+    <script>  
+        const contractAddress = '0xcE4e4f2fbE1E77d6Fec3f99795Dd9A3e8e725Fc6';  
+        const abi = [  
+            // Place your contract's ABI here  
+            {  
+                "inputs": [{ "internalType": "uint256", "name": "num", "type": "uint256" }],  
+                "name": "store",  
+                "outputs": [],  
+                "stateMutability": "nonpayable",  
+                "type": "function"  
+            },  
+            {  
+                "inputs": [],  
+                "name": "view_money",  
+                "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],  
+                "stateMutability": "view",  
+                "type": "function"  
+            }  
+        ];  
+
+        let web3;  
+        let contract;  
+
+        window.addEventListener('load', async () => {  
+            if (typeof window.ethereum !== 'undefined') {  
+                web3 = new Web3(window.ethereum);  
+                await window.ethereum.request({ method: 'eth_requestAccounts' });  
+                contract = new web3.eth.Contract(abi, contractAddress);  
+            } else {  
+                alert('Please install MetaMask!');  
+            }  
+        });  
+
+        document.getElementById('storeBtn').addEventListener('click', async () => {  
+            const amount = document.getElementById('storeAmount').value;  
+            const accounts = await web3.eth.getAccounts();  
+            await contract.methods.store(amount).send({ from: accounts[0] });  
+            alert('Amount stored successfully!');  
+        });  
+
+        document.getElementById('viewBtn').addEventListener('click', async () => {  
+            const amount = await contract.methods.view_money().call();  
+            document.getElementById('storedAmount').innerText = amount;  
+        });  
+    </script>  
+</body>  
+
+</html>
